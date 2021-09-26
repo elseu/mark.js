@@ -1064,9 +1064,9 @@
               isMarked = false;
               this.wrapRangeInMappedTextNode(dict, start, end, function (node) {
                 return filterCb(group, node);
-              }, function (node, groupIndex) {
+              }, function (node, grNodeIndex) {
                 isMarked = true;
-                eachCb(node, nodeIndex++, groupIndex, i);
+                eachCb(node, nodeIndex++, grNodeIndex, i);
               });
 
               if (isMarked && end > max) {
@@ -1081,7 +1081,6 @@
       value: function wrapMatchGroups2(dict, match, matchIdx, lastIndex, filterCb, eachCb) {
         var nodeIndex = 0,
             startIndex = 0,
-            max = 0,
             i = matchIdx === 0 ? 1 : matchIdx,
             group,
             start,
@@ -1098,24 +1097,15 @@
             end = start + group.length;
 
             if (start !== -1) {
-              if (start < max) {
-                startIndex = end;
-                continue;
-              }
-
               isMarked = false;
               this.wrapRangeInMappedTextNode(dict, s + start, s + end, function (node) {
                 return filterCb(group, node);
-              }, function (node, groupIndex) {
+              }, function (node, grNodeIndex) {
                 isMarked = true;
-                eachCb(node, nodeIndex++, groupIndex, i);
+                eachCb(node, nodeIndex++, grNodeIndex, i);
               });
 
               if (isMarked) {
-                if (end > max) {
-                  max = end;
-                }
-
                 startIndex = end;
               }
             }
@@ -1171,7 +1161,7 @@
         group = match[matchIdx];
 
         if (group) {
-          index = text.indexOf(match[matchIdx]);
+          index = text.indexOf(group);
 
           if (index !== -1 && index < textIndex) {
             textIndex = index;
@@ -1233,22 +1223,22 @@
               if (regex.hasIndices) {
                 _this6.wrapMatchGroups(dict, match, matchIdx, function (group, node) {
                   return filterCb(group, node);
-                }, function (node, mNodeIndex, grNodeIndex, index) {
+                }, function (node, mNodeIndex, grNodeIndex, grIndex) {
                   eachCb(node, {
                     match: match,
-                    index: index,
                     matchNodeIndex: mNodeIndex,
+                    groupIndex: grIndex,
                     groupNodeIndex: grNodeIndex
                   });
                 });
               } else {
                 _this6.wrapMatchGroups2(dict, match, matchIdx, end, function (gr, node) {
                   return filterCb(gr, node);
-                }, function (node, mNodeIndex, grNodeIndex, index) {
+                }, function (node, mNodeIndex, grNodeIndex, grIndex) {
                   eachCb(node, {
                     match: match,
-                    index: index,
                     matchNodeIndex: mNodeIndex,
+                    groupIndex: grIndex,
                     groupNodeIndex: grNodeIndex
                   });
                 });
@@ -1271,7 +1261,6 @@
                 }, function (node, mNodeIndex) {
                   eachCb(node, {
                     match: match,
-                    index: matchIdx,
                     matchNodeIndex: mNodeIndex
                   });
                 });

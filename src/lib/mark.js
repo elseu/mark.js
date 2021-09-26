@@ -663,12 +663,12 @@ class Mark {
           end = match.indices[i][1];
 
           isMarked = false;
-          this.wrapRangeInMappedTextNode(dict, start, end, function(node) {
+          this.wrapRangeInMappedTextNode(dict, start, end, node => {
             return  filterCb(group, node);
-          }, function(node, groupIndex) {
+          }, (node, grNodeIndex) => {
             isMarked = true;
             // it also increment nodeIndex to keep track of marked nodes
-            eachCb(node, nodeIndex++, groupIndex, i);
+            eachCb(node, nodeIndex++, grNodeIndex, i);
           });
           // group may be filtered out
           if (isMarked && end > max) {
@@ -692,7 +692,6 @@ class Mark {
   wrapMatchGroups2(dict, match, matchIdx, lastIndex, filterCb, eachCb) {
     let nodeIndex = 0,
       startIndex = 0,
-      max = 0,
       i = matchIdx === 0 ? 1 : matchIdx,
       group, start, end, isMarked;
 
@@ -709,25 +708,16 @@ class Mark {
         end = start + group.length;
 
         if (start !== -1) {
-          if (start < max) {
-            // nested group, parent group is already marked
-            startIndex = end;
-            continue;
-          }
-
           isMarked = false;
           this.wrapRangeInMappedTextNode(dict, s + start, s + end, (node) => {
             return filterCb(group, node);
-          }, (node, groupIndex) => {
+          }, (node, grNodeIndex) => {
             isMarked = true;
             // it also increment nodeIndex to keep track of marked nodes
-            eachCb(node, nodeIndex++, groupIndex, i);
+            eachCb(node, nodeIndex++, grNodeIndex, i);
           });
           // a match group may be filtered out
           if (isMarked) {
-            if (end > max) {
-              max = end;
-            }
             startIndex = end;
           }
         }
@@ -788,7 +778,7 @@ class Mark {
     // it correct start index if group to mark is nested in ignore group
     group = match[matchIdx];
     if (group) {
-      index = text.indexOf(match[matchIdx]);
+      index = text.indexOf(group);
       if (index !== -1 && index < textIndex) {
         textIndex = index;
       }
@@ -867,9 +857,10 @@ class Mark {
    * @typedef Mark~matchInfoObject
    * @type {object}
    * @property {array} match - The result of RegExp exec() method
-   * @property {number} index - The 0-based index of the current match group
    * @property {number} matchNodeIndex - The 0-based index of marked element
    * within match
+   * @property {number} groupIndex - The index of the current separate match
+   * group, is only available with option 'separateGroups'
    * @property {number} groupNodeIndex - The 0-based index of marked element
    * within match group, is only available with option 'separateGroups'
    */
@@ -917,11 +908,11 @@ class Mark {
           if (regex.hasIndices) {
             this.wrapMatchGroups(dict, match, matchIdx, (group, node) => {
               return filterCb(group, node);
-            }, (node, mNodeIndex, grNodeIndex, index) => {
+            }, (node, mNodeIndex, grNodeIndex, grIndex) => {
               eachCb(node, {
                 match : match,
-                index : index,
                 matchNodeIndex : mNodeIndex,
+                groupIndex : grIndex,
                 groupNodeIndex : grNodeIndex
               });
             });
@@ -929,11 +920,11 @@ class Mark {
           } else {
             this.wrapMatchGroups2(dict, match, matchIdx, end, (gr, node) => {
               return filterCb(gr, node);
-            }, (node, mNodeIndex, grNodeIndex, index) => {
+            }, (node, mNodeIndex, grNodeIndex, grIndex) => {
               eachCb(node, {
                 match : match,
-                index : index,
                 matchNodeIndex : mNodeIndex,
+                groupIndex : grIndex,
                 groupNodeIndex : grNodeIndex
               });
             });
@@ -959,7 +950,6 @@ class Mark {
             }, (node, mNodeIndex) => {
               eachCb(node, {
                 match : match,
-                index : matchIdx,
                 matchNodeIndex : mNodeIndex
               });
             });

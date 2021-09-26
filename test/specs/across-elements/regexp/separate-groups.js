@@ -45,6 +45,26 @@ describe('markRegExp with acrossElements and separateGroups', function() {
     });
   });
 
+  it(message + 'with nested group in filtered out one', function(done) {
+    var reg = /\b(group1\b.+?\b(group2))\b(?:\s+(?:\w+\s+)?(group3))?\b/gi;
+    new Mark($ctx[0]).markRegExp(reg, {
+      'acrossElements' : true,
+      'separateGroups' : true,
+      filter : function(nd, group) {
+        if (/^group1/i.test(group)) {
+          return  false;
+        }
+        return  true;
+      },
+      each : eachMark,
+      'done' : function() {
+        // mch, gr1, gr2, gr3,
+        test([27, 0, 27, 14]);
+        done();
+      }
+    });
+  });
+
   it(message + 'with nested group', function(done) {
     var reg = /\b(group1\b.+?\b(group2))\b(?:\s+(?:\w+\s+)?(group3))?\b/gi;
     new Mark($ctx[0]).markRegExp(reg, {
@@ -107,15 +127,15 @@ describe('markRegExp with acrossElements and separateGroups', function() {
       matchCount++;
     }
     if (info.groupNodeIndex === 0) {
-      if (info.index === 1) {
+      if (info.groupIndex === 1) {
         elem.className = 'group1-1';
         group1Count++;
 
-      } else if (info.index === 2) {
+      } else if (info.groupIndex === 2) {
         elem.className = 'group2-1';
         group2Count++;
 
-      } else if (info.index === 3) {
+      } else if (info.groupIndex === 3) {
         elem.className = 'group3-1';
         group3Count++;
       }
