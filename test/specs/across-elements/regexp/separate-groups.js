@@ -20,7 +20,7 @@ describe('markRegExp with acrossElements and separateGroups', function() {
       each : eachMark,
       'done' : function() {
         // mch, gr1, gr2, gr3,
-        test([27, 27, 27, 14]);
+        test([27, 27, 27, 16]);
         done();
       }
     });
@@ -39,7 +39,7 @@ describe('markRegExp with acrossElements and separateGroups', function() {
       each : eachMark,
       'done' : function() {
         // mch, gr1, gr2, gr3,
-        test([27, 27, 0, 14]);
+        test([27, 27, 0, 16]);
         done();
       }
     });
@@ -59,7 +59,7 @@ describe('markRegExp with acrossElements and separateGroups', function() {
       each : eachMark,
       'done' : function() {
         // mch, gr1, gr2, gr3,
-        test([27, 0, 27, 14]);
+        test([27, 0, 27, 16]);
         done();
       }
     });
@@ -73,7 +73,7 @@ describe('markRegExp with acrossElements and separateGroups', function() {
       each : eachMark,
       'done' : function() {
         // mch, gr1, gr2, gr3,
-        test([27, 27, 0, 14]);
+        test([27, 27, 0, 16]);
         done();
       }
     });
@@ -88,7 +88,7 @@ describe('markRegExp with acrossElements and separateGroups', function() {
       each : eachMark,
       'done' : function() {
         // mch, gr1, gr2, gr3,
-        test([27, 0, 27, 14]);
+        test([27, 0, 27, 16]);
         done();
       }
     });
@@ -102,7 +102,7 @@ describe('markRegExp with acrossElements and separateGroups', function() {
       each : eachMark,
       'done' : function() {
         // mch, gr1, gr2, gr3,
-        test([27, 0, 27, 14]);
+        test([27, 0, 27, 16]);
         done();
       }
     });
@@ -116,7 +116,7 @@ describe('markRegExp with acrossElements and separateGroups', function() {
       each : eachMark,
       'done' : function() {
         // mch, gr1, gr2, gr3,
-        test([14, 0, 0, 14]);
+        test([16, 0, 0, 16]);
         done();
       }
     });

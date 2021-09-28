@@ -16,15 +16,15 @@ describe('markRegExp with acrossElements and ignoreGroups', function() {
       'ignoreGroups' : 1,
       each : eachMark,
       'done' : function() {
-        expect(matchCount).toBe(6);
-        expect(testMarkedText($ctx)).toBe(6);
+        expect(matchCount).toBe(9);
+        expect(testMarkedText($ctx)).toBe(9);
         done();
       }
     });
   });
 
   it('should mark group nested in ignore one & next word', function(done) {
-    var reg = /\b(group1\b.+\b(some)\s+)\w+\b/gi,
+    var reg = /\b(group1\b.+?\b(some)\s+)\w+\b/gi,
       $ctx = $('.across-elements-ignore-groups-1');
 
     new Mark($ctx[0]).markRegExp(reg, {
@@ -33,8 +33,8 @@ describe('markRegExp with acrossElements and ignoreGroups', function() {
       'ignoreGroups' : 1,
       each : eachMark,
       'done' : function() {
-        expect(matchCount).toBe(7);
-        expect(testMarkedText($ctx)).toBe(7);
+        expect(matchCount).toBe(10);
+        expect(testMarkedText($ctx)).toBe(10);
         done();
       }
     });
@@ -50,8 +50,8 @@ describe('markRegExp with acrossElements and ignoreGroups', function() {
       'ignoreGroups' : 2,
       each : eachMark,
       'done' : function() {
-        expect(matchCount).toBe(7);
-        expect(testMarkedText($ctx)).toBe(7);
+        expect(matchCount).toBe(9);
+        expect(testMarkedText($ctx)).toBe(9);
         done();
       }
     });
@@ -67,15 +67,15 @@ describe('markRegExp with acrossElements and ignoreGroups', function() {
       'ignoreGroups' : 2,
       each : eachMark,
       'done' : function() {
-        expect(matchCount).toBe(9);
-        expect(testMarkedText($ctx)).toBe(9);
+        expect(matchCount).toBe(12);
+        expect(testMarkedText($ctx)).toBe(12);
         done();
       }
     });
   });
 
   it('should mark text with nested ignore group', function(done) {
-    var reg = /\b(group1\b.+\b(group2))\s+some\s+\w+\b/gi,
+    var reg = /\b(group1\b.+?\b(group2))\s+some\s+\w+\b/gi,
       $ctx = $('.across-elements-ignore-groups-2');
 
     new Mark($ctx[0]).markRegExp(reg, {
@@ -84,8 +84,8 @@ describe('markRegExp with acrossElements and ignoreGroups', function() {
       'ignoreGroups' : 2,
       each : eachMark,
       'done' : function() {
-        expect(matchCount).toBe(7);
-        expect(testMarkedText($ctx)).toBe(7);
+        expect(matchCount).toBe(9);
+        expect(testMarkedText($ctx)).toBe(9);
         done();
       }
     });
