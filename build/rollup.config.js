@@ -32,6 +32,27 @@ const output = {
       })()
     })
   },
+  outputRegCreator = Object.assign({}, output, {
+    name: 'regexpcreator',
+    file: 'dist/regexpcreator.js',
+  }),
+  output_es6 = Object.assign({}, output, {
+    format : 'es'
+  }),
+  outputRegCreator_es6 = Object.assign({}, output_es6, {
+    name: 'regexpcreator',
+    file: 'dist/regexpcreator.js'
+  }),
+  outputJquery_es6 = Object.assign({}, output_es6, {
+    file: (() => {
+      const spl = pkg.main.split('/');
+      spl[spl.length - 1] = `jquery.${spl[spl.length - 1]}`;
+      return spl.join('/');
+    })(),
+    globals: {
+      'jquery': 'jQuery'
+    }
+  }),
   outputJquery = Object.assign({}, output, {
     file: (() => {
       const spl = pkg.main.split('/');
@@ -43,6 +64,7 @@ const output = {
     }
   }),
   externalJquery = ['jquery'],
+  externalJquery_es6 = ['./jquery.js'],
   plugins = [
     // for external dependencies (just in case)
     resolve(),
@@ -89,20 +111,52 @@ const output = {
   })();
 
 // Actual config export
-export default [{
+export default [
+// es6
+{
+  input: 'src/vanilla.js',
+  output: Object.assign({}, output_es6, {
+    file: output_es6.file.replace('.js', '.es6.js')
+  }),
+  plugins
+}, {
+  input: 'src/jquery_es6.js',
+  output: Object.assign({}, outputJquery_es6, {
+    file: outputJquery_es6.file.replace('.js', '.es6.js')
+  }),
+  plugins,
+  external: externalJquery_es6
+}, {
+  input: 'src/reg_creator.js',
+  output: Object.assign({}, outputRegCreator_es6, {
+    file: outputRegCreator_es6.file.replace('.js', '.es6.js')
+  }),
+  plugins
+},
+// umd
+{
   input: 'src/vanilla.js',
   output: Object.assign({}, output, {
-    file: output.file.replace('.js', '.es6.js')
+    file: output.file.replace('.js', '.umd.js')
   }),
   plugins
 }, {
   input: 'src/jquery.js',
   output: Object.assign({}, outputJquery, {
-    file: outputJquery.file.replace('.js', '.es6.js')
+    file: outputJquery.file.replace('.js', '.umd.js')
   }),
   plugins,
   external: externalJquery
-}, {
+},
+{
+  input: 'src/reg_creator.js',
+  output: Object.assign({}, outputRegCreator, {
+    file: outputRegCreator.file.replace('.js', '.umd.js')
+  }),
+  plugins
+},
+// ES5
+{
   input: 'src/vanilla.js',
   output,
   plugins: pluginsES5
@@ -112,19 +166,55 @@ export default [{
   plugins: pluginsES5,
   external: externalJquery
 }, {
+  input: 'src/reg_creator.js',
+  output: outputRegCreator,
+  plugins: pluginsES5
+},
+
+// minified es6
+{
   input: 'src/vanilla.js',
-  output: Object.assign({}, output, {
-    file: output.file.replace('.js', '.es6.min.js')
+  output : Object.assign({}, output_es6, {
+    file: output_es6.file.replace('.js', '.es6.min.js')
+  }),
+  plugins: minifyPlugins,
+}, {
+  input: 'src/jquery_es6.js',
+  output: Object.assign({}, outputJquery_es6, {
+    file: outputJquery_es6.file.replace('.js', '.es6.min.js')
+  }),
+  plugins: minifyPlugins,
+  external: externalJquery_es6
+}, {
+  input: 'src/reg_creator.js',
+  output : Object.assign({}, outputRegCreator_es6, {
+    file: outputRegCreator_es6.file.replace('.js', '.es6.min.js')
+  }),
+  plugins: minifyPlugins,
+},
+// minified umd.
+{
+  input: 'src/vanilla.js',
+  output : Object.assign({}, output, {
+    file: output.file.replace('.js', '.umd.min.js')
   }),
   plugins: minifyPlugins,
 }, {
   input: 'src/jquery.js',
   output: Object.assign({}, outputJquery, {
-    file: outputJquery.file.replace('.js', '.es6.min.js')
+    file: outputJquery.file.replace('.js', '.umd.min.js')
   }),
   plugins: minifyPlugins,
   external: externalJquery
 }, {
+  input: 'src/reg_creator.js',
+  output : Object.assign({}, outputRegCreator, {
+    file: outputRegCreator.file.replace('.js', '.umd.min.js')
+  }),
+  plugins: minifyPlugins,
+},
+// minified ES5
+{
   input: 'src/vanilla.js',
   output: Object.assign({}, output, {
     file: output.file.replace('.js', '.min.js')
@@ -137,4 +227,10 @@ export default [{
   }),
   plugins: minifyPluginsES5,
   external: externalJquery
+}, {
+  input: 'src/reg_creator.js',
+  output: Object.assign({}, outputRegCreator, {
+    file: outputRegCreator.file.replace('.js', '.min.js')
+  }),
+  plugins: minifyPluginsES5
 }];
